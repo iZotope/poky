@@ -79,14 +79,18 @@ class Wget(FetchMethod):
             dldir = d.getVar("DL_DIR", True)
             bb.utils.mkdirhier(os.path.dirname(dldir + os.sep + ud.localfile))
             fetchcmd += " -O " + dldir + os.sep + ud.localfile
-
         uri = ud.url.split(";")[0]
+        
         if os.path.exists(ud.localpath):
             # file exists, but we didnt complete it.. trying again..
             fetchcmd += d.expand(" -c -P ${DL_DIR} '%s'" % uri)
         else:
             fetchcmd += d.expand(" -P ${DL_DIR} '%s'" % uri)
 
+        if ud.user:
+            fetchcmd += d.expand(" --user='%s'" % ud.user)
+            fetchcmd += d.expand(" --password='%s'" % ud.pswd)
+ 
         self._runwget(ud, d, fetchcmd, False)
 
         # Sanity check since wget can pretend it succeed when it didn't
