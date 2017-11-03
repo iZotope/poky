@@ -133,5 +133,6 @@ class GitSM(Git):
         if submodules:
             runfetchcmd("cp -r " + ud.clonedir + "/modules " + ud.destdir + "/.git/", d)
             runfetchcmd(ud.basecmd + " submodule init", d)
+            runfetchcmd(ud.basecmd + " submodule sync --recursive", d)
             runfetchcmd(ud.basecmd + " submodule update --init --recursive", d)
 

@@ -49,6 +49,10 @@ Supported SRC_URI options are:
    referring to commit which is valid in tag instead of branch.
    The default is "0", set nobranch=1 if needed.
 
+- mergebranch
+   If this argument is present, the specified branch will be merged onto
+   master before the build occurs.
+
 """
 
 #Copyright (C) 2005 Richard Purdie
@@ -109,6 +113,10 @@ class Git(FetchMethod):
         ud.rebaseable = ud.parm.get("rebaseable","0") == "1"
 
         ud.nobranch = ud.parm.get("nobranch","0") == "1"
+
+        if "mergebranch" in ud.parm:
+            print("Adding mergebranch variable")
+            ud.mergebranch = ud.parm["mergebranch"]
 
         # bareclone implies nocheckout
         ud.bareclone = ud.parm.get("bareclone","0") == "1"
@@ -293,6 +301,9 @@ class Git(FetchMethod):
                             branchname), d)
             else:
                 runfetchcmd("%s checkout %s" % (ud.basecmd, ud.revisions[ud.names[0]]), d)
+
+        if hasattr(ud, 'mergebranch'):
+            runfetchcmd("%s merge %s" % (ud.basecmd, ud.mergebranch), d)
 
         return True
 

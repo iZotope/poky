@@ -9,6 +9,12 @@
 # source function library
 . /etc/init.d/functions
 
+if test -e #STATEINITDIR#/asound.state && ! test -e #STATEDIR#/asound.state;
+then
+	mkdir -p #STATEDIR#
+	cp #STATEINITDIR#/asound.state #STATEDIR#/asound.state
+fi
+
 asound_restore(){
 	echo "ALSA: Restoring mixer settings..."
 	if test -x /usr/sbin/alsactl -a -e #STATEDIR#/asound.state
